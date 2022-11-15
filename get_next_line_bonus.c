@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: youlhafi <youlhafi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 19:57:44 by youlhafi          #+#    #+#             */
-/*   Updated: 2022/11/11 13:33:42 by youlhafi         ###   ########.fr       */
+/*   Created: 2022/11/10 19:51:44 by youlhafi          #+#    #+#             */
+/*   Updated: 2022/11/14 14:49:29 by youlhafi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*ft_free(char *s)
 {
@@ -18,7 +18,7 @@ static char	*ft_free(char *s)
 	return (NULL);
 }
 
-static char	*ft_read(int fd, char *s)
+char	*ft_read(int fd, char *s)
 {
 	char	*buff;
 	ssize_t	r_bytes;
@@ -45,7 +45,7 @@ static char	*ft_read(int fd, char *s)
 	return (s);
 }
 
-static char	*ft_one_line(char *s)
+char	*ft_one_line(char *s)
 {
 	char	*line;
 	int		i;
@@ -73,7 +73,7 @@ static char	*ft_one_line(char *s)
 	return (line);
 }
 
-static char	*ft_left(char *rest)
+char	*ft_left(char *rest)
 {
 	char	*left;
 	int		i;
@@ -98,15 +98,15 @@ static char	*ft_left(char *rest)
 
 char	*get_next_line(int fd)
 {
-	static char	*rest;
+	static char	*rest[10240];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	rest = ft_read(fd, rest);
-	if (!rest)
+	rest[fd] = ft_read(fd, rest[fd]);
+	if (!rest[fd])
 		return (NULL);
-	line = ft_one_line(rest);
-	rest = ft_left(rest);
+	line = ft_one_line(rest[fd]);
+	rest[fd] = ft_left(rest[fd]);
 	return (line);
 }
